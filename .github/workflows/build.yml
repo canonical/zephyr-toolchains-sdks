@@ -1,0 +1,105 @@
+name: Build SDKs
+
+on:
+  pull_request:
+    branches:
+      # Shared version branches: every toolchain moves together per sdk-ng
+      # release (e.g. 0.17.4, 1.0.1).
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  # Build a matrix of the SDK subdirectories to pack. On a pull request only the
+  # SDKs whose files changed are built; shared CI/config changes rebuild all.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.set.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: set
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          # Every directory that defines an SDK, except the excluded base SDK.
+          mapfile -t all < <(find . -maxdepth 2 -name sdkcraft.yaml -printf '%h\n' \
+            | sed 's|^\./||' | grep -vx 'zephyr-sdk' | sort -u)
+
+          selected=("${all[@]}")
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            if changed="$(git diff --name-only "${BASE_SHA}...${HEAD_SHA}" 2>/dev/null)"; then
+              if printf '%s\n' "$changed" | grep -qE '^(\.github/|renovate\.json$)'; then
+                selected=("${all[@]}")
+              else
+                selected=()
+                for d in "${all[@]}"; do
+                  if printf '%s\n' "$changed" | grep -q "^${d}/"; then
+                    selected+=("$d")
+                  fi
+                done
+              fi
+            fi
+          fi
+
+          if [ "${#selected[@]}" -eq 0 ]; then
+            echo "dirs=[]" >> "$GITHUB_OUTPUT"
+          else
+            printf '%s\n' "${selected[@]}" | jq -R . | jq -sc . \
+              | sed 's/^/dirs=/' >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: discover
+    if: ${{ needs.discover.outputs.dirs != '[]' }}
+    runs-on: ["self-hosted", "linux", "jammy", "x64", "xlarge"]
+    strategy:
+      fail-fast: false
+      matrix:
+        dir: ${{ fromJSON(needs.discover.outputs.dirs) }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install LXD
+        uses: canonical/setup-lxd@8c6a87bfb56aa48f3fb9b830baa18562d8bfd4ee # v1
+        with:
+          channel: 6/stable
+
+      - name: Install sdkcraft
+        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
+        with:
+          max_attempts: 3
+          retry_wait_seconds: 60
+          timeout_minutes: 10
+          command: sudo snap install sdkcraft --edge --classic
+
+      - name: Pack ${{ matrix.dir }}
+        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
+        env:
+          SDK_DIR: ${{ matrix.dir }}
+        with:
+          max_attempts: 3
+          retry_wait_seconds: 60
+          timeout_minutes: 120
+          command: |
+            cd "$SDK_DIR"
+            sdkcraft pack
+
+      - name: Test ${{ matrix.dir }}
+        env:
+          SDK_DIR: ${{ matrix.dir }}
+        run: |
+          cd "$SDK_DIR"
+          if [ -f tests/spread.yaml ]; then
+            sdkcraft --verbose test
+          else
+            echo "No tests/spread.yaml found – skipping."
+          fi

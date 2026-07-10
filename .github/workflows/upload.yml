@@ -1,0 +1,48 @@
+name: Build and Upload SDKs
+
+on:
+  push:
+    branches:
+      # Shared version branches: every toolchain moves together per sdk-ng
+      # release (e.g. 0.17.4, 1.0.1).
+      - "[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch name (e.g., 1.0.1)"
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  # List every SDK subdirectory to build and upload (all move together per
+  # sdk-ng release), excluding the base zephyr-sdk.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.set.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: set
+        run: |
+          set -euo pipefail
+          find . -maxdepth 2 -name sdkcraft.yaml -printf '%h\n' \
+            | sed 's|^\./||' | grep -vx 'zephyr-sdk' | sort -u \
+            | jq -R . | jq -sc . | sed 's/^/dirs=/' >> "$GITHUB_OUTPUT"
+
+  build-and-upload:
+    needs: discover
+    strategy:
+      fail-fast: false
+      matrix:
+        dir: ${{ fromJSON(needs.discover.outputs.dirs) }}
+    uses: canonical/sdkcraft-actions/.github/workflows/upload.yml@main
+    with:
+      subdirectory: ${{ matrix.dir }}
+      platforms: '["amd64"]'
+      risk: stable
+    secrets:
+      SDKCRAFT_STORE_CREDENTIALS: ${{ secrets.SDKCRAFT_STORE_CREDENTIALS_PROD }}

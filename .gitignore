@@ -1,0 +1,5 @@
+# sdkcraft build artifacts
+*.sdk
+
+# Workshop lock file
+.workshop.lock

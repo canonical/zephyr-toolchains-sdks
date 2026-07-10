@@ -1,0 +1,70 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "custom.regex"
+  ],
+  "ignorePaths": [
+    "zephyr-sdk/**"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)sdkcraft\\.yaml$/"
+      ],
+      "matchStrings": [
+        "version: \"(?<currentValue>[0-9.]+(?:-[a-zA-Z0-9.]+)?)\""
+      ],
+      "depNameTemplate": "zephyrproject-rtos/sdk-ng",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)VERSION$/"
+      ],
+      "matchStrings": [
+        "(?<currentValue>[0-9.]+(?:-[a-zA-Z0-9.]+)?)"
+      ],
+      "depNameTemplate": "zephyrproject-rtos/sdk-ng",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "baseBranchPatterns": [
+    "0.17.*",
+    "1.0.*"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "zephyrproject-rtos/sdk-ng"
+      ],
+      "groupName": "zephyr sdk-ng toolchains"
+    },
+    {
+      "matchPackageNames": [
+        "zephyrproject-rtos/sdk-ng"
+      ],
+      "matchBaseBranches": [
+        "0.17.*"
+      ],
+      "allowedVersions": "/^0\\.17\\./"
+    },
+    {
+      "matchPackageNames": [
+        "zephyrproject-rtos/sdk-ng"
+      ],
+      "matchBaseBranches": [
+        "1.0.*"
+      ],
+      "allowedVersions": "/^1\\.0\\./"
+    }
+  ]
+}
