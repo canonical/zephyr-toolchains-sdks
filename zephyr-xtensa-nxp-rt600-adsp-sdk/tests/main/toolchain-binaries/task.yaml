@@ -1,0 +1,22 @@
+summary: Verify xtensa-nxp_rt600_adsp_zephyr-elf cross-compiler binaries are present in the SDK
+
+prepare: |
+  envsubst '${BASE}' <workshop.yaml.in >workshop.yaml
+  workshop launch
+
+restore: |
+  workshop remove || true
+
+execute: |
+  # The cross-compiler and the binutils a Zephyr build relies on must be
+  # present and executable inside the packed SDK.
+  workshop exec -- test -x /var/lib/workshop/sdk/zephyr-xtensa-nxp-rt600-adsp/bin/xtensa-nxp_rt600_adsp_zephyr-elf-gcc
+  workshop exec -- test -x /var/lib/workshop/sdk/zephyr-xtensa-nxp-rt600-adsp/bin/xtensa-nxp_rt600_adsp_zephyr-elf-g++
+  workshop exec -- test -x /var/lib/workshop/sdk/zephyr-xtensa-nxp-rt600-adsp/bin/xtensa-nxp_rt600_adsp_zephyr-elf-ld
+  workshop exec -- test -x /var/lib/workshop/sdk/zephyr-xtensa-nxp-rt600-adsp/bin/xtensa-nxp_rt600_adsp_zephyr-elf-as
+  workshop exec -- test -x /var/lib/workshop/sdk/zephyr-xtensa-nxp-rt600-adsp/bin/xtensa-nxp_rt600_adsp_zephyr-elf-objcopy
+  # The compiler must actually run.
+  workshop exec -- /var/lib/workshop/sdk/zephyr-xtensa-nxp-rt600-adsp/bin/xtensa-nxp_rt600_adsp_zephyr-elf-gcc --version
+
+debug: |
+  workshop exec -- ls /var/lib/workshop/sdk/zephyr-xtensa-nxp-rt600-adsp/bin/ | head -20 || true

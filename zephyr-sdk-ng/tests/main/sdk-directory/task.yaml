@@ -1,0 +1,15 @@
+summary: Verify that the zephyr-sdk directory and version file are present in the SDK
+
+prepare: |
+  envsubst '${BASE}' <workshop.yaml.in >workshop.yaml
+  workshop launch
+
+restore: |
+  workshop remove || true
+
+execute: |
+  workshop exec -- test -d /var/lib/workshop/sdk/zephyr-sdk-ng/zephyr-sdk
+  workshop exec -- test -f /var/lib/workshop/sdk/zephyr-sdk-ng/zephyr-sdk/sdk_version
+
+debug: |
+  workshop exec -- ls /var/lib/workshop/sdk/zephyr-sdk-ng/ || true

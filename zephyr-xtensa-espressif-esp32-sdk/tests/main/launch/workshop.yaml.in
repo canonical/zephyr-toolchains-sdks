@@ -1,0 +1,4 @@
+name: test-zephyr-xtensa-espressif-esp32
+base: ${BASE}
+sdks:
+  - name: try-zephyr-xtensa-espressif-esp32

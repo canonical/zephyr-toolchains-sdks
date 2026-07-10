@@ -1,0 +1,3 @@
+# shellcheck source=/dev/null
+source "$SDK/venv/bin/activate"
+pip install pykwalify pyYAML jsonschema esptool packaging pyelftools

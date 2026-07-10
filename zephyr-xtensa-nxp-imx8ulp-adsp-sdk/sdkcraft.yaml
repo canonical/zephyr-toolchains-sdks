@@ -1,0 +1,22 @@
+name: zephyr-xtensa-nxp-imx8ulp-adsp
+version: "1.0.1"
+build-base: ubuntu@24.04
+summary: Zephyr Toolchain
+description: |
+  This SDK provides the cross-compiler toolchain for building Zephyr firmware
+  targeting the xtensa-nxp_imx8ulp_adsp_zephyr-elf target triple. Use this SDK alongside the zephyr base
+  SDK.
+license: Apache-2.0
+website: https://github.com/canonical/zephyr-xtensa-nxp-imx8ulp-adsp-sdk
+platforms:
+  amd64:
+
+slots:
+  toolchain:
+    interface: mount
+    workshop-source: $SDK
+parts:
+  toolchain:
+    plugin: dump
+    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_gnu_linux-x86_64_xtensa-nxp_imx8ulp_adsp_zephyr-elf.tar.xz
+    source-type: tar

@@ -1,0 +1,16 @@
+summary: Verify xtensa-espressif_esp32_zephyr-elf cross-compiler binaries are present in the SDK
+
+prepare: |
+  envsubst '${BASE}' <workshop.yaml.in >workshop.yaml
+  workshop launch
+
+restore: |
+  workshop remove || true
+
+execute: |
+  workshop exec -- test -x /var/lib/workshop/sdk/zephyr-xtensa-espressif-esp32/bin/xtensa-espressif_esp32_zephyr-elf-gcc
+  workshop exec -- test -x /var/lib/workshop/sdk/zephyr-xtensa-espressif-esp32/bin/xtensa-espressif_esp32_zephyr-elf-ld
+  workshop exec -- /var/lib/workshop/sdk/zephyr-xtensa-espressif-esp32/bin/xtensa-espressif_esp32_zephyr-elf-gcc --version
+
+debug: |
+  workshop exec -- ls /var/lib/workshop/sdk/zephyr-xtensa-espressif-esp32/bin/ | head -20 || true

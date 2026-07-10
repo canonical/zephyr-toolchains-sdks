@@ -1,0 +1,16 @@
+project: zephyr-xtensa-sample-controller32
+
+path: /home/ubuntu/project
+
+backends:
+  lxd:
+    systems:
+      - ubuntu-24.04:
+          username: ubuntu
+          vm: true
+
+suites:
+  main/:
+    summary: Test the zephyr-xtensa-sample-controller32 SDK inside a workshop
+    environment:
+      BASE: ubuntu@24.04

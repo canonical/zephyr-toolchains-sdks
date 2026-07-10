@@ -1,0 +1,84 @@
+name: zephyr-sdk-ng
+adopt-info: zephyr-sdk-ng
+build-base: ubuntu@24.04
+summary: Zephyr SDK NG
+description: |
+  This SDK provides the Zephyr RTOS source tree and build tools (west, cmake,
+  ninja, QEMU) for embedded firmware development. A companion toolchain SDK is
+  required to target a specific architecture. The Zephyr build cache and Python
+  virtual environment are persisted on the host across workshop updates.
+license: Apache-2.0
+website: https://github.com/canonical/zephyr-sdk-ng
+platforms:
+  amd64:
+
+plugs:
+  amd64:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/x86_64-zephyr-elf
+  arm64:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/aarch64-zephyr-elf
+  arm:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/arm-zephyr-eabi
+  riscv64:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/riscv64-zephyr-elf
+  xtensa-espressif-esp32s3:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-espressif_esp32s3_zephyr-elf
+  xtensa-espressif-esp32:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-espressif_esp32_zephyr-elf
+
+slots:
+  sdk-ng:
+    interface: mount
+    workshop-source: $SDK
+
+parts:
+  zephyr-sdk-ng:
+    plugin: dump
+    source: .
+    override-pull: |
+      VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
+      craftctl set version="$VERSION"
+      curl -fLO "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${VERSION}/zephyr-sdk-${VERSION}_linux-x86_64_minimal.tar.xz"
+      tar -xf "zephyr-sdk-${VERSION}_linux-x86_64_minimal.tar.xz" --strip-components=1 -C "$CRAFT_PART_SRC"
+      rm -f "zephyr-sdk-${VERSION}_linux-x86_64_minimal.tar.xz"
+    organize:
+      "*": zephyr-sdk/
+    override-build: |
+      # Create target directories for the toolchain plugs. In runtime, when a
+      # toolchain plug is connected to the toolchain slot (comes in a separate
+      # SDK like zephyr-x86_64-elf), it will make the toolchain available to
+      # zephyr-sdk at $SDK/zephyr-sdk/<toolchain>. The empty directory must be
+      # pre-created because SDKs are ro volumes and workshop won't be able to
+      # create these at launch or refresh.
+
+      # zephyr-sdk/x86_64-zephyr-elf directory for the plug's
+      # workshop-target
+      mkdir -p zephyr-sdk/x86_64-zephyr-elf
+
+      # zephyr-sdk/aarch64-zephyr-elf directory for the plug's
+      # workshop-target
+      mkdir -p zephyr-sdk/aarch64-zephyr-elf
+
+      # zephyr-sdk/arm-zephyr-eabi directory for the plug's
+      # workshop-target
+      mkdir -p zephyr-sdk/arm-zephyr-eabi
+
+      # zephyr-sdk/riscv64-zephyr-elf directory for the plug's
+      # workshop-target
+      mkdir -p zephyr-sdk/riscv64-zephyr-elf
+
+      # zephyr-sdk/xtensa-espressif_esp32s3_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-espressif_esp32s3_zephyr-elf
+
+      # zephyr-sdk/xtensa-espressif_esp32_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-espressif_esp32_zephyr-elf
+
+      craftctl default

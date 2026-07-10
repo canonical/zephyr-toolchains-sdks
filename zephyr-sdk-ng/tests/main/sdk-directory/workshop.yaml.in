@@ -1,0 +1,4 @@
+name: test-zephyr-sdk-ng
+base: ${BASE}
+sdks:
+  - name: try-zephyr-sdk-ng

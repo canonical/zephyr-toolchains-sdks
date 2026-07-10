@@ -1,0 +1,4 @@
+name: test-zephyr-amd64
+base: ${BASE}
+sdks:
+  - name: try-zephyr-amd64

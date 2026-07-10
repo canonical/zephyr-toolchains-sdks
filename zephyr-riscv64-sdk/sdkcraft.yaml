@@ -1,0 +1,69 @@
+name: zephyr-riscv64
+adopt-info: toolchain
+build-base: ubuntu@24.04
+summary: Zephyr Toolchain
+description: |
+  This SDK provides the RISC-V cross-compiler toolchain for building Zephyr
+  firmware targeting the riscv64-zephyr-elf target triple. It also includes
+  ESP32 HAL modules and binary blobs for ESP32-S3 firmware development. Use
+  this SDK alongside the zephyr base SDK.
+license: Apache-2.0
+website: https://github.com/canonical/zephyr-riscv64-sdk
+platforms:
+  amd64:
+
+slots:
+  toolchain:
+    interface: mount
+    workshop-source: $SDK
+  modules:
+    interface: mount
+    workshop-source: $SDK/modules
+plugs:
+  venv:
+    interface: mount
+    workshop-target: $SDK/venv
+parts:
+  toolchain:
+    plugin: dump
+    source: .
+    override-pull: |
+      VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
+      craftctl set version="$VERSION"
+      curl -fLO "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${VERSION}/toolchain_linux-x86_64_riscv64-zephyr-elf.tar.xz"
+      tar -xf "toolchain_linux-x86_64_riscv64-zephyr-elf.tar.xz" --strip-components=1 -C "$CRAFT_PART_SRC"
+      rm -f "toolchain_linux-x86_64_riscv64-zephyr-elf.tar.xz"
+    override-build: |
+      # virtualenv directory for the "venv" plug's workshop-target
+      mkdir -p venv
+      craftctl default
+    build-snaps:
+      - astral-uv
+
+  hal_espressif:
+    plugin: dump
+    source: https://github.com/zephyrproject-rtos/hal_espressif.git
+    source-type: git
+    # commit specified on https://github.com/zephyrproject-rtos/zephyr/blob/v4.3.0/west.yml#L172
+    source-commit: af6cfa2e3e7098b596062ab516b80a48a7ba7332
+    organize:
+      "*": modules/hal/espressif/
+
+  # Static libraries blobs
+  fetch-binary-blobs:
+    plugin: nil
+    source: .
+    # source-type: file
+    build-packages:
+      - wget
+    build-snaps:
+      - yq
+    override-build: |
+
+      export PREFIX="$CRAFT_PART_INSTALL/modules/hal/espressif/zephyr/blobs"
+      # commit specified on https://github.com/zephyrproject-rtos/zephyr/blob/v4.3.0/west.yml#L172
+      export HAL_ESPRESSIF_COMMIT=af6cfa2e3e7098b596062ab516b80a48a7ba7332
+
+      "$CRAFT_PART_SRC/fetch-binary-blobs.sh"
+      craftctl default
+

@@ -1,0 +1,16 @@
+project: zephyr-xtensa-dc233c
+
+path: /home/ubuntu/project
+
+backends:
+  lxd:
+    systems:
+      - ubuntu-24.04:
+          username: ubuntu
+          vm: true
+
+suites:
+  main/:
+    summary: Test the zephyr-xtensa-dc233c SDK inside a workshop
+    environment:
+      BASE: ubuntu@24.04

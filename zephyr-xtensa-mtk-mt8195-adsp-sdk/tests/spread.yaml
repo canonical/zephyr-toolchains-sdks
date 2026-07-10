@@ -1,0 +1,16 @@
+project: zephyr-xtensa-mtk-mt8195-adsp
+
+path: /home/ubuntu/project
+
+backends:
+  lxd:
+    systems:
+      - ubuntu-24.04:
+          username: ubuntu
+          vm: true
+
+suites:
+  main/:
+    summary: Test the zephyr-xtensa-mtk-mt8195-adsp SDK inside a workshop
+    environment:
+      BASE: ubuntu@24.04

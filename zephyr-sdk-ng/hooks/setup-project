@@ -1,0 +1,3 @@
+cat <<EOF >> ~/.profile
+export ZEPHYR_SDK_VERSION=$(cat "$SDK/zephyr-sdk/sdk_version")
+EOF

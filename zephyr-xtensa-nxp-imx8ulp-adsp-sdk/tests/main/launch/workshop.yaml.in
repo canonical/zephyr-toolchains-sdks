@@ -1,0 +1,4 @@
+name: test-zephyr-xtensa-nxp-imx8ulp-adsp
+base: ${BASE}
+sdks:
+  - name: try-zephyr-xtensa-nxp-imx8ulp-adsp

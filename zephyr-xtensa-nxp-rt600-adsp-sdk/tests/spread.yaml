@@ -1,0 +1,16 @@
+project: zephyr-xtensa-nxp-rt600-adsp
+
+path: /home/ubuntu/project
+
+backends:
+  lxd:
+    systems:
+      - ubuntu-24.04:
+          username: ubuntu
+          vm: true
+
+suites:
+  main/:
+    summary: Test the zephyr-xtensa-nxp-rt600-adsp SDK inside a workshop
+    environment:
+      BASE: ubuntu@24.04

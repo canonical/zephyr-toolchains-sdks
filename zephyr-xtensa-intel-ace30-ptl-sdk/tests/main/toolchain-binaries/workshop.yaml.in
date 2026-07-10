@@ -1,0 +1,4 @@
+name: test-zephyr-xtensa-intel-ace30-ptl
+base: ${BASE}
+sdks:
+  - name: try-zephyr-xtensa-intel-ace30-ptl

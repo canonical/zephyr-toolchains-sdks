@@ -1,0 +1,22 @@
+name: zephyr-xtensa-sample-controller
+version: "0.0.0"
+build-base: ubuntu@24.04
+summary: Zephyr Toolchain
+description: |
+  This SDK provides the cross-compiler toolchain for building Zephyr firmware
+  targeting the xtensa-sample_controller_zephyr-elf target triple. Use this SDK alongside the zephyr base
+  SDK.
+license: Apache-2.0
+website: https://github.com/canonical/zephyr-xtensa-sample-controller-sdk
+platforms:
+  amd64:
+
+slots:
+  toolchain:
+    interface: mount
+    workshop-source: $SDK
+parts:
+  toolchain:
+    plugin: dump
+    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_linux-x86_64_xtensa-sample_controller_zephyr-elf.tar.xz
+    source-type: tar

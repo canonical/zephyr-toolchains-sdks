@@ -1,0 +1,4 @@
+name: test-zephyr-microblazeel
+base: ${BASE}
+sdks:
+  - name: try-zephyr-microblazeel

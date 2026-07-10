@@ -1,0 +1,14 @@
+summary: Launch a workshop with the zephyr-nios2 SDK and verify setup
+
+prepare: |
+  envsubst '${BASE}' <workshop.yaml.in >workshop.yaml
+  workshop launch
+
+restore: |
+  workshop remove || true
+
+execute: |
+  workshop exec -- true
+
+debug: |
+  workshop tasks
