@@ -38,6 +38,7 @@
     }
   ],
   "baseBranchPatterns": [
+    "0.16.*",
     "0.17.*",
     "1.0.*"
   ],
@@ -47,6 +48,15 @@
         "zephyrproject-rtos/sdk-ng"
       ],
       "groupName": "zephyr sdk-ng toolchains"
+    },
+    {
+      "matchPackageNames": [
+        "zephyrproject-rtos/sdk-ng"
+      ],
+      "matchBaseBranches": [
+        "0.16.*"
+      ],
+      "allowedVersions": "/^0\\.16\\./"
     },
     {
       "matchPackageNames": [
