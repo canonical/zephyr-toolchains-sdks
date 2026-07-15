@@ -1,5 +1,5 @@
 name: zephyr-xtensa-nxp-rt500-adsp
-version: "0.0.0"
+version: "1.0.1"
 build-base: ubuntu@24.04
 summary: Zephyr Toolchain
 description: |
@@ -18,5 +18,5 @@ slots:
 parts:
   toolchain:
     plugin: dump
-    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_linux-x86_64_xtensa-nxp_rt500_adsp_zephyr-elf.tar.xz
+    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_gnu_linux-x86_64_xtensa-nxp_rt500_adsp_zephyr-elf.tar.xz
     source-type: tar
