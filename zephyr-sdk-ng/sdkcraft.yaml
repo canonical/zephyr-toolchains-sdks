@@ -31,6 +31,72 @@ plugs:
   xtensa-espressif-esp32:
     interface: mount
     workshop-target: $SDK/zephyr-sdk/xtensa-espressif_esp32_zephyr-elf
+  arc:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/arc-zephyr-elf
+  arc64:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/arc64-zephyr-elf
+  microblazeel:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/microblazeel-zephyr-elf
+  mips:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/mips-zephyr-elf
+  nios2:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/nios2-zephyr-elf
+  sparc:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/sparc-zephyr-elf
+  xtensa-amd-acp-6-0-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-amd_acp_6_0_adsp_zephyr-elf
+  xtensa-dc233c:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-dc233c_zephyr-elf
+  xtensa-espressif-esp32s2:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-espressif_esp32s2_zephyr-elf
+  xtensa-intel-ace15-mtpm:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-intel_ace15_mtpm_zephyr-elf
+  xtensa-intel-ace30-ptl:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-intel_ace30_ptl_zephyr-elf
+  xtensa-intel-tgl-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-intel_tgl_adsp_zephyr-elf
+  xtensa-mtk-mt8195-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-mtk_mt8195_adsp_zephyr-elf
+  xtensa-nxp-imx-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-nxp_imx_adsp_zephyr-elf
+  xtensa-nxp-imx8m-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-nxp_imx8m_adsp_zephyr-elf
+  xtensa-nxp-imx8ulp-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-nxp_imx8ulp_adsp_zephyr-elf
+  xtensa-nxp-rt500-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-nxp_rt500_adsp_zephyr-elf
+  xtensa-nxp-rt600-adsp:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-nxp_rt600_adsp_zephyr-elf
+  xtensa-nxp-rt700-hifi1:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-nxp_rt700_hifi1_zephyr-elf
+  xtensa-nxp-rt700-hifi4:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-nxp_rt700_hifi4_zephyr-elf
+  xtensa-sample-controller:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-sample_controller_zephyr-elf
+  xtensa-sample-controller32:
+    interface: mount
+    workshop-target: $SDK/zephyr-sdk/xtensa-sample_controller32_zephyr-elf
 
 slots:
   sdk-ng:
@@ -80,5 +146,93 @@ parts:
       # zephyr-sdk/xtensa-espressif_esp32_zephyr-elf directory
       # for the plug's workshop-target
       mkdir -p zephyr-sdk/xtensa-espressif_esp32_zephyr-elf
+
+      # zephyr-sdk/arc-zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/arc-zephyr-elf
+
+      # zephyr-sdk/arc64-zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/arc64-zephyr-elf
+
+      # zephyr-sdk/microblazeel-zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/microblazeel-zephyr-elf
+
+      # zephyr-sdk/mips-zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/mips-zephyr-elf
+
+      # zephyr-sdk/nios2-zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/nios2-zephyr-elf
+
+      # zephyr-sdk/sparc-zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/sparc-zephyr-elf
+
+      # zephyr-sdk/xtensa-amd_acp_6_0_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-amd_acp_6_0_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-dc233c_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-dc233c_zephyr-elf
+
+      # zephyr-sdk/xtensa-espressif_esp32s2_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-espressif_esp32s2_zephyr-elf
+
+      # zephyr-sdk/xtensa-intel_ace15_mtpm_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-intel_ace15_mtpm_zephyr-elf
+
+      # zephyr-sdk/xtensa-intel_ace30_ptl_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-intel_ace30_ptl_zephyr-elf
+
+      # zephyr-sdk/xtensa-intel_tgl_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-intel_tgl_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-mtk_mt8195_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-mtk_mt8195_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-nxp_imx_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-nxp_imx_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-nxp_imx8m_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-nxp_imx8m_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-nxp_imx8ulp_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-nxp_imx8ulp_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-nxp_rt500_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-nxp_rt500_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-nxp_rt600_adsp_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-nxp_rt600_adsp_zephyr-elf
+
+      # zephyr-sdk/xtensa-nxp_rt700_hifi1_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-nxp_rt700_hifi1_zephyr-elf
+
+      # zephyr-sdk/xtensa-nxp_rt700_hifi4_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-nxp_rt700_hifi4_zephyr-elf
+
+      # zephyr-sdk/xtensa-sample_controller_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-sample_controller_zephyr-elf
+
+      # zephyr-sdk/xtensa-sample_controller32_zephyr-elf directory
+      # for the plug's workshop-target
+      mkdir -p zephyr-sdk/xtensa-sample_controller32_zephyr-elf
 
       craftctl default
