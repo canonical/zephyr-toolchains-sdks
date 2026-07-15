@@ -1,4 +1,5 @@
 name: zephyr-arm64
+version: "0.0.0"
 adopt-info: toolchain
 build-base: ubuntu@24.04
 summary: Zephyr Toolchain
@@ -18,10 +19,5 @@ slots:
 parts:
   toolchain:
     plugin: dump
-    source: .
-    override-pull: |
-      VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
-      craftctl set version="$VERSION"
-      curl -fLO "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${VERSION}/toolchain_linux-x86_64_aarch64-zephyr-elf.tar.xz"
-      tar -xf "toolchain_linux-x86_64_aarch64-zephyr-elf.tar.xz" --strip-components=1 -C "$CRAFT_PART_SRC"
-      rm -f "toolchain_linux-x86_64_aarch64-zephyr-elf.tar.xz"
+    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_linux-x86_64_aarch64-zephyr-elf.tar.xz
+    source-type: tar
