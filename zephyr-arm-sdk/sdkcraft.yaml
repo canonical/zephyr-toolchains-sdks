@@ -1,5 +1,5 @@
 name: zephyr-arm
-version: "0.16.9"
+version: "0.0.0"
 build-base: ubuntu@24.04
 summary: Zephyr Toolchain
 description: |
