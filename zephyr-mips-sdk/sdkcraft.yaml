@@ -1,5 +1,5 @@
 name: zephyr-mips
-version: "0.0.0"
+version: "0.17.4"
 build-base: ubuntu@24.04
 summary: Zephyr Toolchain
 description: |
