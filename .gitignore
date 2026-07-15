@@ -3,3 +3,10 @@
 
 # Workshop lock file
 .workshop.lock
+
+# Spread temp files
+.spread-reuse.yaml
+tests/cache/*
+parts
+prime
+stage
