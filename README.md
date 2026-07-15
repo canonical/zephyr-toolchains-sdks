@@ -67,7 +67,7 @@ single set of **version branches**:
 
 - `main` — development branch. `sdkcraft.yaml` versions here are placeholders.
 - `0.17.*`, `1.0.*`, … — one branch per released `sdk-ng` line (for example
-  `0.17.4`, `1.0.1`). The `sdkcraft.yaml` (or `VERSION`) files on these branches
+  `0.16.9`, `0.17.4`, `1.0.1`). The `sdkcraft.yaml` on these branches
   pin the exact `sdk-ng` version that every toolchain is built from.
 
 Renovate opens a single, grouped pull request per version branch that bumps
@@ -101,14 +101,11 @@ workflow changes** — the `zephyr-sdk` base SDK is the only directory excluded.
 ## Dependency updates (Renovate)
 
 A single [`renovate.json`](renovate.json) at the repository root governs the
-whole monorepo. Its custom managers scan **every** subdirectory:
-
-- the inline `version: "…"` field of each `sdkcraft.yaml`, and
-- any `VERSION` file (for SDKs not yet migrated to an inline version),
-
+whole monorepo. Its custom managers scan in **every** subdirectory
+the inline `version: "…"` field of each `sdkcraft.yaml`,
 resolving each against `zephyrproject-rtos/sdk-ng` GitHub releases. Updates are
 grouped into one pull request per version branch, and `packageRules` constrain
-each base branch to its release line (`0.17.*` → `^0.17.`, `1.0.*` → `^1.0.`).
+each base branch to its release line (`0.17.*` → `^0.17.`, `1.0.*` → `^1.0.`, `0.16.*` → `^0.16.`).
 The base `zephyr-sdk` directory is excluded via `ignorePaths`.
 
 ---
