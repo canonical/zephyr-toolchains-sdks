@@ -1,5 +1,5 @@
 name: zephyr-nios2
-version: "0.0.0"
+version: "0.16.9"
 build-base: ubuntu@24.04
 summary: Zephyr Toolchain
 description: |
