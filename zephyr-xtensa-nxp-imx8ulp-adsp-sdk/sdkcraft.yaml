@@ -18,5 +18,5 @@ slots:
 parts:
   toolchain:
     plugin: dump
-    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_gnu_linux-x86_64_xtensa-nxp_imx8ulp_adsp_zephyr-elf.tar.xz
+    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_linux-x86_64_xtensa-nxp_imx8ulp_adsp_zephyr-elf.tar.xz
     source-type: tar
