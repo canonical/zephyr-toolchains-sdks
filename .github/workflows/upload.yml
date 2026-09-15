@@ -19,11 +19,13 @@ concurrency:
 
 jobs:
   # List every SDK subdirectory to build and upload (all move together per
-  # sdk-ng release), excluding the base zephyr-sdk.
+  # sdk-ng release), excluding the base zephyr-sdk. Also compute the set of
+  # tracks each SDK should be released to.
   discover:
     runs-on: ubuntu-latest
     outputs:
       dirs: ${{ steps.set.outputs.dirs }}
+      tracks: ${{ steps.tracks.outputs.tracks }}
     steps:
       - uses: actions/checkout@v6
       - id: set
@@ -33,16 +35,39 @@ jobs:
             | sed 's|^\./||' | grep -vx 'zephyr-sdk' | sort -u \
             | jq -R . | jq -sc . | sed 's/^/dirs=/' >> "$GITHUB_OUTPUT"
 
+      # Each version branch publishes to its own version track AND to an
+      # additional Ubuntu-series track. Extend the mapping below when adding a
+      # new version branch.
+      - id: tracks
+        env:
+          DISPATCH_BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          set -euo pipefail
+          BRANCH="${DISPATCH_BRANCH:-${GITHUB_REF#refs/heads/}}"
+          case "$BRANCH" in
+            0.16.9) SERIES_TRACK="24.04.0" ;;
+            1.0.1)  SERIES_TRACK="26.04.0" ;;
+            *)      SERIES_TRACK="" ;;
+          esac
+          if [ -n "$SERIES_TRACK" ]; then
+            TRACKS="$(jq -nc --arg b "$BRANCH" --arg s "$SERIES_TRACK" '[$b, $s]')"
+          else
+            TRACKS="$(jq -nc --arg b "$BRANCH" '[$b]')"
+          fi
+          echo "tracks=$TRACKS" >> "$GITHUB_OUTPUT"
+
   build-and-upload:
     needs: discover
     strategy:
       fail-fast: false
       matrix:
         dir: ${{ fromJSON(needs.discover.outputs.dirs) }}
+        track: ${{ fromJSON(needs.discover.outputs.tracks) }}
     uses: canonical/sdkcraft-actions/.github/workflows/upload.yml@main
     with:
       subdirectory: ${{ matrix.dir }}
       platforms: '["amd64"]'
       risk: stable
+      track: ${{ matrix.track }}
     secrets:
       SDKCRAFT_STORE_CREDENTIALS: ${{ secrets.SDKCRAFT_STORE_CREDENTIALS_PROD }}
