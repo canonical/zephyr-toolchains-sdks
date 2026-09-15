@@ -105,129 +105,69 @@ slots:
 
 parts:
   zephyr-sdk-ng:
-    plugin: dump
-    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/zephyr-sdk-$CRAFT_PROJECT_VERSION_linux-x86_64_minimal.tar.xz
-    source-type: tar
-    organize:
-      "*": zephyr-sdk/
+    plugin: nil
+    build-packages:
+      - curl
+      - jq
     override-build: |
-      # Create target directories for the toolchain plugs. In runtime, when a
-      # toolchain plug is connected to the toolchain slot (comes in a separate
-      # SDK like zephyr-x86_64-elf), it will make the toolchain available to
-      # zephyr-sdk at $SDK/zephyr-sdk/<toolchain>. The empty directory must be
-      # pre-created because SDKs are ro volumes and workshop won't be able to
-      # create these at launch or refresh.
+      set -eu
 
-      # zephyr-sdk/x86_64-zephyr-elf directory for the plug's
-      # workshop-target
-      mkdir -p zephyr-sdk/x86_64-zephyr-elf
+      # Fetch the Zephyr SDK NG base (rtos-zephyr-sdk-ng-common) from the
+      # arctic-tern zephyr-toolchain-26.04 PPA instead of the upstream minimal
+      # tarball, for full control over the SDK contents.
+      PKG="rtos-zephyr-sdk-ng-common"
+      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.04"
 
-      # zephyr-sdk/aarch64-zephyr-elf directory for the plug's
-      # workshop-target
-      mkdir -p zephyr-sdk/aarch64-zephyr-elf
+      # Resolve the published .deb URL for this project version.
+      SELF="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${ARCHIVE}?ws.op=getPublishedBinaries&binary_name=${PKG}&exact_match=true&status=Published" \
+        | jq -r --arg v "$CRAFT_PROJECT_VERSION" \
+            '[.entries[] | select(.binary_package_version | startswith($v + "-"))] | sort_by(.binary_package_version) | .[0].self_link' \
+        | head -n1)"
+      [ -n "$SELF" ]
+      DEB_URL="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${SELF}?ws.op=binaryFileUrls" | jq -r '.[0]')"
 
-      # zephyr-sdk/arm-zephyr-eabi directory for the plug's
-      # workshop-target
-      mkdir -p zephyr-sdk/arm-zephyr-eabi
+      # Download and extract the .deb without dependency resolution.
+      curl -fSL --retry 5 --retry-delay 3 --retry-all-errors --no-progress-meter -o "${CRAFT_PART_BUILD}/ng-common.deb" "$DEB_URL"
+      dpkg-deb -x "${CRAFT_PART_BUILD}/ng-common.deb" "${CRAFT_PART_BUILD}/extract"
 
-      # zephyr-sdk/riscv64-zephyr-elf directory for the plug's
-      # workshop-target
-      mkdir -p zephyr-sdk/riscv64-zephyr-elf
+      # The base SDK lives under usr/lib/zephyr-sdk-<version>/; expose its
+      # contents at $SDK/zephyr-sdk/.
+      mkdir -p "${CRAFT_PART_INSTALL}/zephyr-sdk"
+      cp -a "${CRAFT_PART_BUILD}"/extract/usr/lib/zephyr-sdk-*/. "${CRAFT_PART_INSTALL}/zephyr-sdk/"
 
-      # zephyr-sdk/xtensa-espressif_esp32s3_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-espressif_esp32s3_zephyr-elf
-
-      # zephyr-sdk/xtensa-espressif_esp32_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-espressif_esp32_zephyr-elf
-
-      # zephyr-sdk/arc-zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/arc-zephyr-elf
-
-      # zephyr-sdk/arc64-zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/arc64-zephyr-elf
-
-      # zephyr-sdk/microblazeel-zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/microblazeel-zephyr-elf
-
-      # zephyr-sdk/mips-zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/mips-zephyr-elf
-
-      # zephyr-sdk/nios2-zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/nios2-zephyr-elf
-
-      # zephyr-sdk/sparc-zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/sparc-zephyr-elf
-
-      # zephyr-sdk/xtensa-amd_acp_6_0_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-amd_acp_6_0_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-dc233c_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-dc233c_zephyr-elf
-
-      # zephyr-sdk/xtensa-espressif_esp32s2_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-espressif_esp32s2_zephyr-elf
-
-      # zephyr-sdk/xtensa-intel_ace15_mtpm_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-intel_ace15_mtpm_zephyr-elf
-
-      # zephyr-sdk/xtensa-intel_ace30_ptl_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-intel_ace30_ptl_zephyr-elf
-
-      # zephyr-sdk/xtensa-intel_tgl_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-intel_tgl_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-mtk_mt8195_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-mtk_mt8195_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-nxp_imx_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-nxp_imx_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-nxp_imx8m_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-nxp_imx8m_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-nxp_imx8ulp_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-nxp_imx8ulp_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-nxp_rt500_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-nxp_rt500_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-nxp_rt600_adsp_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-nxp_rt600_adsp_zephyr-elf
-
-      # zephyr-sdk/xtensa-nxp_rt700_hifi1_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-nxp_rt700_hifi1_zephyr-elf
-
-      # zephyr-sdk/xtensa-nxp_rt700_hifi4_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-nxp_rt700_hifi4_zephyr-elf
-
-      # zephyr-sdk/xtensa-sample_controller_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-sample_controller_zephyr-elf
-
-      # zephyr-sdk/xtensa-sample_controller32_zephyr-elf directory
-      # for the plug's workshop-target
-      mkdir -p zephyr-sdk/xtensa-sample_controller32_zephyr-elf
-
-      craftctl default
+      # Pre-create the toolchain mount points. At runtime, when a toolchain plug
+      # (from a separate toolchain SDK) is connected to the toolchain slot, it is
+      # mounted at $SDK/zephyr-sdk/<triple>. These empty directories must exist
+      # ahead of time because the SDK is a read-only volume and workshop cannot
+      # create them at launch or refresh.
+      for target in \
+        aarch64-zephyr-elf \
+        arc-zephyr-elf \
+        arc64-zephyr-elf \
+        arm-zephyr-eabi \
+        microblazeel-zephyr-elf \
+        mips-zephyr-elf \
+        nios2-zephyr-elf \
+        riscv64-zephyr-elf \
+        sparc-zephyr-elf \
+        x86_64-zephyr-elf \
+        xtensa-amd_acp_6_0_adsp_zephyr-elf \
+        xtensa-dc233c_zephyr-elf \
+        xtensa-espressif_esp32_zephyr-elf \
+        xtensa-espressif_esp32s2_zephyr-elf \
+        xtensa-espressif_esp32s3_zephyr-elf \
+        xtensa-intel_ace15_mtpm_zephyr-elf \
+        xtensa-intel_ace30_ptl_zephyr-elf \
+        xtensa-intel_tgl_adsp_zephyr-elf \
+        xtensa-mtk_mt8195_adsp_zephyr-elf \
+        xtensa-nxp_imx8m_adsp_zephyr-elf \
+        xtensa-nxp_imx8ulp_adsp_zephyr-elf \
+        xtensa-nxp_imx_adsp_zephyr-elf \
+        xtensa-nxp_rt500_adsp_zephyr-elf \
+        xtensa-nxp_rt600_adsp_zephyr-elf \
+        xtensa-nxp_rt700_hifi1_zephyr-elf \
+        xtensa-nxp_rt700_hifi4_zephyr-elf \
+        xtensa-sample_controller32_zephyr-elf \
+        xtensa-sample_controller_zephyr-elf; do
+        mkdir -p "${CRAFT_PART_INSTALL}/zephyr-sdk/${target}"
+      done

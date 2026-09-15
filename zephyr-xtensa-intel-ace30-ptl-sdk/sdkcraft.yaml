@@ -17,6 +17,31 @@ slots:
     workshop-source: $SDK
 parts:
   toolchain:
-    plugin: dump
-    source: https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$CRAFT_PROJECT_VERSION/toolchain_gnu_linux-x86_64_xtensa-intel_ace30_ptl_zephyr-elf.tar.xz
-    source-type: tar
+    plugin: nil
+    build-packages:
+      - curl
+      - jq
+    override-build: |
+      set -eu
+
+      # Fetch the toolchain from the arctic-tern zephyr-toolchain-26.04 PPA instead
+      # of the upstream release tarball, for full control over the SDK contents.
+      PKG="rtos-zephyr-sdk-xtensa-intel-ace30-ptl-zephyr-elf"
+      TRIPLE="xtensa-intel_ace30_ptl_zephyr-elf"
+      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.04"
+
+      # Resolve the published .deb URL for this project version.
+      SELF="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${ARCHIVE}?ws.op=getPublishedBinaries&binary_name=${PKG}&exact_match=true&status=Published" \
+        | jq -r --arg v "$CRAFT_PROJECT_VERSION" \
+            '[.entries[] | select(.binary_package_version | startswith($v + "-"))] | sort_by(.binary_package_version) | .[0].self_link' \
+        | head -n1)"
+      [ -n "$SELF" ]
+      DEB_URL="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${SELF}?ws.op=binaryFileUrls" | jq -r '.[0]')"
+
+      # Download and extract the .deb without dependency resolution.
+      curl -fSL --retry 5 --retry-delay 3 --retry-all-errors --no-progress-meter -o "${CRAFT_PART_BUILD}/toolchain.deb" "$DEB_URL"
+      dpkg-deb -x "${CRAFT_PART_BUILD}/toolchain.deb" "${CRAFT_PART_BUILD}/extract"
+
+      # The toolchain lives under usr/lib/zephyr-sdk-<version>/<triple>/; make
+      # its contents the root of the SDK (matches the upstream tarball layout).
+      cp -a "${CRAFT_PART_BUILD}"/extract/usr/lib/zephyr-sdk-*/"${TRIPLE}"/. "${CRAFT_PART_INSTALL}/"
