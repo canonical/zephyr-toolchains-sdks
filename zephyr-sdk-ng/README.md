@@ -66,7 +66,7 @@ actions:
             -B "build-${DIRNAME}-amd64" \
             -DBUILD_VERSION="$ZEPHYR_VERSION" \
             -DBOARD=qemu_x86 \
-            -DCROSS_COMPILE="$ZEPHYR_SDK_INSTALL_DIR/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-"
+            -DCROSS_COMPILE="$ZEPHYR_SDK_INSTALL_DIR/gnu/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-"
 
         ninja -C "build-${DIRNAME}-amd64"
     done
@@ -118,196 +118,196 @@ workshop run build-amd64
 ### `amd64`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/x86_64-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/x86_64-zephyr-elf`
 - Purpose: Mount point for the x86_64 cross-compiler toolchain from the
   `zephyr-amd64` SDK.
 
 ### `arm64`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/aarch64-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/aarch64-zephyr-elf`
 - Purpose: Mount point for the AArch64 cross-compiler toolchain from the
   `zephyr-arm64` SDK.
 
 ### `arm`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/arm-zephyr-eabi`
+- Workshop target: `$SDK/zephyr-sdk/gnu/arm-zephyr-eabi`
 - Purpose: Mount point for the ARM cross-compiler toolchain from the
   `zephyr-arm` SDK.
 
 ### `riscv64`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/riscv64-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/riscv64-zephyr-elf`
 - Purpose: Mount point for the RISC-V cross-compiler toolchain from the
   `zephyr-riscv64` SDK.
 
 ### `xtensa-espressif-esp32s3`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-espressif_esp32s3_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-espressif_esp32s3_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-espressif-esp32s3` SDK.
 
 ### `xtensa-espressif-esp32`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-espressif_esp32_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-espressif_esp32_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-espressif-esp32` SDK.
 
 ### `arc`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/arc-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/arc-zephyr-elf`
 - Purpose: Mount point for the ARC cross-compiler toolchain from the
   `zephyr-arc` SDK.
 
 ### `arc64`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/arc64-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/arc64-zephyr-elf`
 - Purpose: Mount point for the ARC64 cross-compiler toolchain from the
   `zephyr-arc64` SDK.
 
 ### `microblazeel`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/microblazeel-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/microblazeel-zephyr-elf`
 - Purpose: Mount point for the MicroBlaze cross-compiler toolchain from the
   `zephyr-microblazeel` SDK.
 
 ### `mips`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/mips-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/mips-zephyr-elf`
 - Purpose: Mount point for the MIPS cross-compiler toolchain from the
   `zephyr-mips` SDK.
 
 ### `nios2`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/nios2-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/nios2-zephyr-elf`
 - Purpose: Mount point for the Nios II cross-compiler toolchain from the
   `zephyr-nios2` SDK.
 
 ### `sparc`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/sparc-zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/sparc-zephyr-elf`
 - Purpose: Mount point for the SPARC cross-compiler toolchain from the
   `zephyr-sparc` SDK.
 
 ### `xtensa-amd-acp-6-0-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-amd_acp_6_0_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-amd_acp_6_0_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-amd-acp-6-0-adsp` SDK.
 
 ### `xtensa-dc233c`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-dc233c_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-dc233c_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-dc233c` SDK.
 
 ### `xtensa-espressif-esp32s2`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-espressif_esp32s2_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-espressif_esp32s2_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-espressif-esp32s2` SDK.
 
 ### `xtensa-intel-ace15-mtpm`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-intel_ace15_mtpm_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-intel_ace15_mtpm_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-intel-ace15-mtpm` SDK.
 
 ### `xtensa-intel-ace30-ptl`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-intel_ace30_ptl_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-intel_ace30_ptl_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-intel-ace30-ptl` SDK.
 
 ### `xtensa-intel-tgl-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-intel_tgl_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-intel_tgl_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-intel-tgl-adsp` SDK.
 
 ### `xtensa-mtk-mt8195-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-mtk_mt8195_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-mtk_mt8195_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-mtk-mt8195-adsp` SDK.
 
 ### `xtensa-nxp-imx-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-nxp_imx_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-nxp_imx_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-nxp-imx-adsp` SDK.
 
 ### `xtensa-nxp-imx8m-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-nxp_imx8m_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-nxp_imx8m_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-nxp-imx8m-adsp` SDK.
 
 ### `xtensa-nxp-imx8ulp-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-nxp_imx8ulp_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-nxp_imx8ulp_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-nxp-imx8ulp-adsp` SDK.
 
 ### `xtensa-nxp-rt500-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-nxp_rt500_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-nxp_rt500_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-nxp-rt500-adsp` SDK.
 
 ### `xtensa-nxp-rt600-adsp`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-nxp_rt600_adsp_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-nxp_rt600_adsp_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-nxp-rt600-adsp` SDK.
 
 ### `xtensa-nxp-rt700-hifi1`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-nxp_rt700_hifi1_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-nxp_rt700_hifi1_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-nxp-rt700-hifi1` SDK.
 
 ### `xtensa-nxp-rt700-hifi4`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-nxp_rt700_hifi4_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-nxp_rt700_hifi4_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-nxp-rt700-hifi4` SDK.
 
 ### `xtensa-sample-controller`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-sample_controller_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-sample_controller_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-sample-controller` SDK.
 
 ### `xtensa-sample-controller32`
 
 - Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/xtensa-sample_controller32_zephyr-elf`
+- Workshop target: `$SDK/zephyr-sdk/gnu/xtensa-sample_controller32_zephyr-elf`
 - Purpose: Mount point for the Xtensa cross-compiler toolchain from the
   `zephyr-xtensa-sample-controller32` SDK.
 
