@@ -1,3 +1,53 @@
-cat <<EOF >> /etc/profile.d/zephyr-sdk-ng.sh
-export ZEPHYR_SDK_INSTALL_DIR=$SDK/zephyr-sdk
+# Configure ZEPHYR_SDK_INSTALL_DIR for every login shell.
+#
+# The SDK bundle exposes every toolchain mount point under
+# "<sdk>/zephyr-sdk/gnu/<triple>", but only the toolchains that are actually
+# connected are populated; the rest stay as empty mount points. Zephyr's
+# toolchain autodetection (cmake/zephyr/gnu/generic.cmake) globs
+# "$TOOLCHAIN_HOME/*-*zephyr-*" and picks the FIRST match, so an empty,
+# unconnected toolchain directory (e.g. aarch64-zephyr-elf) would be selected
+# and the build fails with "unable to find the toolchain".
+#
+# To avoid that, each login shell rebuilds a curated tree that mirrors the
+# bundle but keeps only the populated toolchains under gnu/, and points
+# ZEPHYR_SDK_INSTALL_DIR at it. The curation happens at login time, which is
+# always after the toolchain mounts are established.
+
+# The first heredoc is unquoted so $SDK expands to the absolute bundle path now.
+cat > /etc/profile.d/zephyr-sdk-ng.sh <<EOF
+_ZSDK_SRC="$SDK/zephyr-sdk"
+EOF
+
+# The second heredoc is quoted so its body is written verbatim and runs at login.
+cat >> /etc/profile.d/zephyr-sdk-ng.sh <<'EOF'
+_ZSDK_DST="${XDG_CACHE_HOME:-$HOME/.cache}/zephyr-sdk-ng/sdk"
+
+if [ -d "$_ZSDK_SRC/gnu" ]; then
+  # Rebuild the curated tree from scratch so it always reflects the currently
+  # connected toolchains.
+  rm -rf "$_ZSDK_DST"
+  mkdir -p "$_ZSDK_DST/gnu"
+
+  # Link everything except the toolchain directory tree at the top level
+  # (cmake/, sdk_version, sdk_toolchains, setup.sh, hosttools, ...).
+  for _zsdk_e in "$_ZSDK_SRC"/*; do
+    _zsdk_b="${_zsdk_e##*/}"
+    [ "$_zsdk_b" = gnu ] && continue
+    ln -sfn "$_zsdk_e" "$_ZSDK_DST/$_zsdk_b"
+  done
+
+  # Link only populated toolchains (a real toolchain ships a bin/ directory);
+  # skip the empty, unconnected mount points.
+  for _zsdk_e in "$_ZSDK_SRC"/gnu/*; do
+    [ -d "$_zsdk_e/bin" ] && ln -sfn "$_zsdk_e" "$_ZSDK_DST/gnu/${_zsdk_e##*/}"
+  done
+
+  export ZEPHYR_SDK_INSTALL_DIR="$_ZSDK_DST"
+  unset _zsdk_e _zsdk_b
+else
+  # No gnu/ layout (older bundle): use the bundle directly.
+  export ZEPHYR_SDK_INSTALL_DIR="$_ZSDK_SRC"
+fi
+
+unset _ZSDK_SRC _ZSDK_DST
 EOF
