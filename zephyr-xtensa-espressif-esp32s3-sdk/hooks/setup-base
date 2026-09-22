@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+
+# Install the ESP32 build tools (esptool) and the Python dependencies required
+# to build ESP32-S3 firmware. Everything is installed from Ubuntu archive (apt)
+# packages instead of pip. Packages that are published by the
+# arctic-tern/zephyr-toolchain-26.04 PPA (esptool, python3-pykwalify) are
+# preferred over the Ubuntu archive via the apt pin below.
+
+apt-get update
+eatmydata -- apt-get install -y software-properties-common
+add-apt-repository -y ppa:arctic-tern/zephyr-toolchain-26.04
+
+# Always prefer the PPA over the Ubuntu archive when a package exists in both.
+cat <<'PREF' >/etc/apt/preferences.d/zephyr-toolchain-26.04.pref
+Package: *
+Pin: release o=LP-PPA-arctic-tern-zephyr-toolchain-26.04
+Pin-Priority: 1001
+PREF
+
+apt-get update
+eatmydata -- apt-get install -y \
+  esptool \
+  python3-pykwalify \
+  python3-yaml \
+  python3-jsonschema \
+  python3-packaging \
+  python3-pyelftools

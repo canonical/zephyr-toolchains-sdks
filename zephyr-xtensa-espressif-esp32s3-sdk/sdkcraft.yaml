@@ -4,17 +4,29 @@ build-base: ubuntu@24.04
 summary: Zephyr Toolchain
 description: |
   This SDK provides the Xtensa cross-compiler toolchain for building Zephyr
-  firmware targeting the xtensa-espressif_esp32s3_zephyr-elf target triple.
-  Use this SDK alongside the zephyr base SDK.
+  firmware targeting the xtensa-espressif_esp32s3_zephyr-elf target triple. It
+  also bundles the ESP32 HAL module (hal_espressif) and binary blobs required to
+  build ESP32-S3 firmware. The ESP32 build tools (esptool) and Python
+  dependencies are installed at launch from the Ubuntu archive and the
+  arctic-tern/zephyr-toolchain-26.04 PPA. Use this SDK alongside the zephyr base
+  SDK.
 license: Apache-2.0
 website: https://github.com/canonical/zephyr-xtensa-espressif-esp32s3-sdk
 platforms:
   amd64:
 
+package-repositories:
+  - type: apt
+    ppa: arctic-tern/zephyr-toolchain-26.04
+    priority: always
+
 slots:
   toolchain:
     interface: mount
     workshop-source: $SDK
+  modules:
+    interface: mount
+    workshop-source: $SDK/modules
 parts:
   toolchain:
     plugin: nil
