@@ -5,7 +5,7 @@ path: /home/ubuntu/project
 backends:
   lxd:
     systems:
-      - ubuntu-24.04:
+      - ubuntu-26.04:
           username: ubuntu
           vm: true
 
@@ -13,4 +13,4 @@ suites:
   main/:
     summary: Test the zephyr-xtensa-espressif-esp32s3 SDK inside a workshop
     environment:
-      BASE: ubuntu@24.04
+      BASE: ubuntu@26.04
