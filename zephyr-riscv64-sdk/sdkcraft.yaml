@@ -52,9 +52,13 @@ parts:
       curl -fSL --retry 5 --retry-delay 3 --retry-all-errors --no-progress-meter -o "${CRAFT_PART_BUILD}/toolchain.deb" "$DEB_URL"
       dpkg-deb -x "${CRAFT_PART_BUILD}/toolchain.deb" "${CRAFT_PART_BUILD}/extract"
 
-      # The toolchain lives under usr/lib/zephyr-sdk-<version>/<triple>/; make
-      # its contents the root of the SDK (matches the upstream tarball layout).
-      cp -a "${CRAFT_PART_BUILD}"/extract/usr/lib/zephyr-sdk-*/"${TRIPLE}"/. "${CRAFT_PART_INSTALL}/"
+      # The toolchain lives under usr/lib/zephyr-sdk-<version>/<compiler>/<triple>/
+      # (e.g. .../gnu/<triple>/). Locate it by triple so we are robust to the
+      # intermediate compiler directory, then make its contents the root of the
+      # SDK (matches the upstream tarball layout).
+      TOOLCHAIN_DIR="$(find "${CRAFT_PART_BUILD}/extract/usr/lib" -maxdepth 3 -type d -name "${TRIPLE}" | head -n1)"
+      [ -n "$TOOLCHAIN_DIR" ]
+      cp -a "${TOOLCHAIN_DIR}/." "${CRAFT_PART_INSTALL}/"
 
       # virtualenv directory for the "venv" plug's workshop-target
       mkdir -p "${CRAFT_PART_INSTALL}/venv"
