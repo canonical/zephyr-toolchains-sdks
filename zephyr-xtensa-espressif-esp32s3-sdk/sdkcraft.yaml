@@ -15,11 +15,6 @@ website: https://github.com/canonical/zephyr-xtensa-espressif-esp32s3-sdk
 platforms:
   amd64:
 
-package-repositories:
-  - type: apt
-    ppa: arctic-tern/zephyr-toolchain-26.04
-    priority: always
-
 slots:
   toolchain:
     interface: mount
@@ -61,3 +56,47 @@ parts:
       TOOLCHAIN_DIR="$(find "${CRAFT_PART_BUILD}/extract/usr/lib" -maxdepth 3 -type d -name "${TRIPLE}" | head -n1)"
       [ -n "$TOOLCHAIN_DIR" ]
       cp -a "${TOOLCHAIN_DIR}/." "${CRAFT_PART_INSTALL}/"
+
+  # ESP32 HAL module (hal_espressif) required to build ESP32-S3 firmware. The
+  # module tree is fetched from the arctic-tern zephyr-toolchain-26.04 PPA (the
+  # hal-espressif deb) via the Launchpad API, matching how the toolchain itself
+  # is sourced. The ESP32 binary blobs (radio/PHY libraries) referenced by the
+  # module's own zephyr/module.yml are downloaded and checksum-verified at build
+  # time (the deb ships the module metadata but not the blobs).
+  hal_espressif:
+    plugin: nil
+    source: .
+    build-packages:
+      - curl
+      - jq
+      - wget
+    build-snaps:
+      - yq
+    override-build: |
+      set -eu
+
+      PKG="hal-espressif"
+      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.04"
+
+      # Resolve the published .deb URL for the latest hal-espressif version.
+      SELF="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${ARCHIVE}?ws.op=getPublishedBinaries&binary_name=${PKG}&exact_match=true&status=Published" \
+        | jq -r '[.entries[]] | sort_by(.binary_package_version) | .[-1].self_link')"
+      [ -n "$SELF" ]
+      DEB_URL="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${SELF}?ws.op=binaryFileUrls" | jq -r '.[0]')"
+
+      # Download and extract the .deb without dependency resolution.
+      curl -fSL --retry 5 --retry-delay 3 --retry-all-errors --no-progress-meter -o "${CRAFT_PART_BUILD}/hal-espressif.deb" "$DEB_URL"
+      dpkg-deb -x "${CRAFT_PART_BUILD}/hal-espressif.deb" "${CRAFT_PART_BUILD}/hal-extract"
+
+      MODULE_SRC="${CRAFT_PART_BUILD}/hal-extract/usr/share/zephyr-sdk/modules/hal-espressif"
+      MODULE_DEST="${CRAFT_PART_INSTALL}/modules/hal/espressif"
+      mkdir -p "$MODULE_DEST"
+      cp -a "${MODULE_SRC}/." "${MODULE_DEST}/"
+
+      # Download + checksum-verify the binary blobs listed in the module's own
+      # module.yml.
+      export PREFIX="${MODULE_DEST}/zephyr/blobs"
+      export MODULE_YML="${MODULE_SRC}/zephyr/module.yml"
+      "$CRAFT_PART_SRC/fetch-binary-blobs.sh"
+
+      craftctl default
