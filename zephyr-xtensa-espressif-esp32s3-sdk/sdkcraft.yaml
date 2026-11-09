@@ -8,10 +8,10 @@ description: |
   also bundles the ESP32 HAL module (hal_espressif) and binary blobs required to
   build ESP32-S3 firmware. The ESP32 build tools (esptool) and Python
   dependencies are installed at launch from the Ubuntu archive and the
-  arctic-tern/zephyr-toolchain-26.04 PPA. Use this SDK alongside the zephyr base
+  arctic-tern/zephyr-toolchain-26.10 PPA. Use this SDK alongside the zephyr base
   SDK.
 license: Apache-2.0
-website: https://github.com/canonical/zephyr-xtensa-espressif-esp32s3-sdk
+website: https://github.com/canonical/zephyr-toolchains-sdks
 platforms:
   amd64:
 
@@ -31,11 +31,11 @@ parts:
     override-build: |
       set -eu
 
-      # Fetch the toolchain from the arctic-tern zephyr-toolchain-26.04 PPA instead
+      # Fetch the toolchain from the arctic-tern zephyr-toolchain-26.10 PPA instead
       # of the upstream release tarball, for full control over the SDK contents.
       PKG="rtos-zephyr-sdk-xtensa-espressif-esp32s3-zephyr-elf"
       TRIPLE="xtensa-espressif_esp32s3_zephyr-elf"
-      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.04"
+      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.10"
 
       # Resolve the published .deb URL for this project version.
       SELF="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${ARCHIVE}?ws.op=getPublishedBinaries&binary_name=${PKG}&exact_match=true&status=Published" \
@@ -58,7 +58,7 @@ parts:
       cp -a "${TOOLCHAIN_DIR}/." "${CRAFT_PART_INSTALL}/"
 
   # ESP32 HAL module (hal_espressif) required to build ESP32-S3 firmware. The
-  # module tree is fetched from the arctic-tern zephyr-toolchain-26.04 PPA (the
+  # module tree is fetched from the arctic-tern zephyr-toolchain-26.10 PPA (the
   # hal-espressif deb) via the Launchpad API, matching how the toolchain itself
   # is sourced. The ESP32 binary blobs (radio/PHY libraries) referenced by the
   # module's own zephyr/module.yml are downloaded and checksum-verified at build
@@ -76,7 +76,7 @@ parts:
       set -eu
 
       PKG="hal-espressif"
-      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.04"
+      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.10"
 
       # Resolve the published .deb URL for the latest hal-espressif version.
       SELF="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${ARCHIVE}?ws.op=getPublishedBinaries&binary_name=${PKG}&exact_match=true&status=Published" \

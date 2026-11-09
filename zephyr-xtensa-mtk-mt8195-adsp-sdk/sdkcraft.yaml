@@ -7,7 +7,7 @@ description: |
   targeting the xtensa-mtk_mt8195_adsp_zephyr-elf target triple. Use this SDK alongside the zephyr base
   SDK.
 license: Apache-2.0
-website: https://github.com/canonical/zephyr-xtensa-mtk-mt8195-adsp-sdk
+website: https://github.com/canonical/zephyr-toolchains-sdks
 platforms:
   amd64:
 
@@ -24,11 +24,11 @@ parts:
     override-build: |
       set -eu
 
-      # Fetch the toolchain from the arctic-tern zephyr-toolchain-26.04 PPA instead
+      # Fetch the toolchain from the arctic-tern zephyr-toolchain-26.10 PPA instead
       # of the upstream release tarball, for full control over the SDK contents.
       PKG="rtos-zephyr-sdk-xtensa-mtk-mt8195-adsp-zephyr-elf"
       TRIPLE="xtensa-mtk_mt8195_adsp_zephyr-elf"
-      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.04"
+      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.10"
 
       # Resolve the published .deb URL for this project version.
       SELF="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${ARCHIVE}?ws.op=getPublishedBinaries&binary_name=${PKG}&exact_match=true&status=Published" \

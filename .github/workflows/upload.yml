@@ -6,10 +6,12 @@ on:
       # Shared version branches: every toolchain moves together per sdk-ng
       # release (e.g. 0.17.4, 1.0.1).
       - "[0-9]+.[0-9]+.[0-9]+"
+      - "[2-9][0-9].04"
+      - "[2-9][0-9].10"
   workflow_dispatch:
     inputs:
       branch:
-        description: "Branch name (e.g., 1.0.1)"
+        description: "Branch name (e.g., 1.0.1, 26.10)"
         required: true
         type: string
 
@@ -47,6 +49,7 @@ jobs:
           case "$BRANCH" in
             0.16.9) SERIES_TRACK="24.04.0" ;;
             1.0.1)  SERIES_TRACK="26.04.0" ;;
+            26.10)  SERIES_TRACK="26.10.0" ;;
             *)      SERIES_TRACK="" ;;
           esac
           if [ -n "$SERIES_TRACK" ]; then

@@ -8,7 +8,7 @@ description: |
   required to target a specific architecture. The Zephyr build cache and Python
   virtual environment are persisted on the host across workshop updates.
 license: Apache-2.0
-website: https://github.com/canonical/zephyr-sdk-ng
+website: https://github.com/canonical/zephyr-toolchains-sdks
 platforms:
   amd64:
 
@@ -113,10 +113,10 @@ parts:
       set -eu
 
       # Fetch the Zephyr SDK NG base (rtos-zephyr-sdk-ng-common) from the
-      # arctic-tern zephyr-toolchain-26.04 PPA instead of the upstream minimal
+      # arctic-tern zephyr-toolchain-26.10 PPA instead of the upstream minimal
       # tarball, for full control over the SDK contents.
       PKG="rtos-zephyr-sdk-ng-common"
-      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.04"
+      ARCHIVE="https://api.launchpad.net/devel/~arctic-tern/+archive/ubuntu/zephyr-toolchain-26.10"
 
       # Resolve the published .deb URL for this project version.
       SELF="$(curl -fsSL --retry 5 --retry-delay 3 --retry-all-errors "${ARCHIVE}?ws.op=getPublishedBinaries&binary_name=${PKG}&exact_match=true&status=Published" \
