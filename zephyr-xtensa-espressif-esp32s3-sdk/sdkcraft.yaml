@@ -88,7 +88,7 @@ parts:
       curl -fSL --retry 5 --retry-delay 3 --retry-all-errors --no-progress-meter -o "${CRAFT_PART_BUILD}/hal-espressif.deb" "$DEB_URL"
       dpkg-deb -x "${CRAFT_PART_BUILD}/hal-espressif.deb" "${CRAFT_PART_BUILD}/hal-extract"
 
-      MODULE_SRC="${CRAFT_PART_BUILD}/hal-extract/usr/share/zephyr-sdk/modules/hal-espressif"
+      MODULE_SRC="${CRAFT_PART_BUILD}/hal-extract/usr/share/zephyr/modules/hal-espressif"
       MODULE_DEST="${CRAFT_PART_INSTALL}/modules/hal/espressif"
       mkdir -p "$MODULE_DEST"
       cp -a "${MODULE_SRC}/." "${MODULE_DEST}/"
