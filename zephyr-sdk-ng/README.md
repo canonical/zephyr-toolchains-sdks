@@ -18,7 +18,6 @@ Python virtual environment are persisted on the host across workshop updates.
 - `zephyr-arc64` — arc64-zephyr-elf
 - `zephyr-microblazeel` — microblazeel-zephyr-elf
 - `zephyr-mips` — mips-zephyr-elf
-- `zephyr-nios2` — nios2-zephyr-elf
 - `zephyr-sparc` — sparc-zephyr-elf
 - `zephyr-xtensa-amd-acp-6-0-adsp` — xtensa-amd_acp_6_0_adsp_zephyr-elf
 - `zephyr-xtensa-dc233c` — xtensa-dc233c_zephyr-elf
@@ -184,13 +183,6 @@ workshop run build-amd64
 - Workshop target: `$SDK/zephyr-sdk/gnu/mips-zephyr-elf`
 - Purpose: Mount point for the MIPS cross-compiler toolchain from the
   `zephyr-mips` SDK.
-
-### `nios2`
-
-- Interface: `mount`
-- Workshop target: `$SDK/zephyr-sdk/gnu/nios2-zephyr-elf`
-- Purpose: Mount point for the Nios II cross-compiler toolchain from the
-  `zephyr-nios2` SDK.
 
 ### `sparc`
 
