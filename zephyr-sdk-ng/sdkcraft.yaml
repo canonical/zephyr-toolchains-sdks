@@ -43,9 +43,6 @@ plugs:
   mips:
     interface: mount
     workshop-target: $SDK/zephyr-sdk/gnu/mips-zephyr-elf
-  nios2:
-    interface: mount
-    workshop-target: $SDK/zephyr-sdk/gnu/nios2-zephyr-elf
   sparc:
     interface: mount
     workshop-target: $SDK/zephyr-sdk/gnu/sparc-zephyr-elf
@@ -147,7 +144,6 @@ parts:
         arm-zephyr-eabi \
         microblazeel-zephyr-elf \
         mips-zephyr-elf \
-        nios2-zephyr-elf \
         riscv64-zephyr-elf \
         sparc-zephyr-elf \
         x86_64-zephyr-elf \

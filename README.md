@@ -36,7 +36,6 @@ are the per-architecture toolchains:
 | [`zephyr-arm64-sdk`](zephyr-arm64-sdk/) | `aarch64-zephyr-elf` |
 | [`zephyr-microblazeel-sdk`](zephyr-microblazeel-sdk/) | `microblazeel-zephyr-elf` |
 | [`zephyr-mips-sdk`](zephyr-mips-sdk/) | `mips-zephyr-elf` |
-| [`zephyr-nios2-sdk`](zephyr-nios2-sdk/) | `nios2-zephyr-elf` |
 | [`zephyr-riscv64-sdk`](zephyr-riscv64-sdk/) | `riscv64-zephyr-elf` |
 | [`zephyr-sparc-sdk`](zephyr-sparc-sdk/) | `sparc-zephyr-elf` |
 | [`zephyr-xtensa-amd-acp-6-0-adsp-sdk`](zephyr-xtensa-amd-acp-6-0-adsp-sdk/) | `xtensa-amd_acp_6_0_adsp_zephyr-elf` |
