@@ -1,3 +1,44 @@
-cat <<EOF >> /etc/profile.d/zephyr-sdk-ng.sh
-export ZEPHYR_SDK_INSTALL_DIR=$SDK/zephyr-sdk
+# Configure ZEPHYR_SDK_INSTALL_DIR for every login shell.
+#
+# Every toolchain plug has a pre-created mount point in the bundle, but only
+# connected toolchains are populated. The SDK's generic.cmake globs
+# "$TOOLCHAIN_HOME/*-*zephyr-*" and takes the FIRST match, so an empty,
+# unconnected mount point (e.g. aarch64-zephyr-elf) gets selected and the build
+# fails with "unable to find the toolchain". Each login shell therefore rebuilds
+# a curated tree with only populated toolchains and points
+# ZEPHYR_SDK_INSTALL_DIR at it.
+
+# Unquoted heredoc: $SDK expands to the absolute bundle path now.
+cat > /etc/profile.d/zephyr-sdk-ng.sh <<EOF
+_ZSDK_SRC="$SDK/zephyr-sdk"
+EOF
+
+# Quoted heredoc: written verbatim, runs at login.
+cat >> /etc/profile.d/zephyr-sdk-ng.sh <<'EOF'
+_ZSDK_DST="${XDG_CACHE_HOME:-$HOME/.cache}/zephyr-sdk-ng/sdk"
+
+# SDK NG >= 1.0 keeps toolchains under gnu/; older bundles (0.16.x, 0.17.x)
+# keep them at the top level next to cmake/.
+if [ -d "$_ZSDK_SRC/gnu" ]; then _ZSDK_TC="$_ZSDK_SRC/gnu"; else _ZSDK_TC=""; fi
+
+rm -rf "$_ZSDK_DST"
+mkdir -p "$_ZSDK_DST"
+
+for _zsdk_e in "$_ZSDK_SRC"/*; do
+  _zsdk_b="${_zsdk_e##*/}"
+  case "$_zsdk_b" in
+    gnu) mkdir -p "$_ZSDK_DST/gnu" ;;
+    *-*zephyr-*) [ -d "$_zsdk_e/bin" ] && ln -sfn "$_zsdk_e" "$_ZSDK_DST/$_zsdk_b" ;;
+    *) ln -sfn "$_zsdk_e" "$_ZSDK_DST/$_zsdk_b" ;;
+  esac
+done
+
+if [ -n "$_ZSDK_TC" ]; then
+  for _zsdk_e in "$_ZSDK_TC"/*; do
+    [ -d "$_zsdk_e/bin" ] && ln -sfn "$_zsdk_e" "$_ZSDK_DST/gnu/${_zsdk_e##*/}"
+  done
+fi
+
+export ZEPHYR_SDK_INSTALL_DIR="$_ZSDK_DST"
+unset _ZSDK_SRC _ZSDK_DST _ZSDK_TC _zsdk_e _zsdk_b
 EOF
